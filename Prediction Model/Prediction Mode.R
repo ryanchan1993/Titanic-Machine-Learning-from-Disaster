@@ -39,3 +39,34 @@ library(stringr)
 
 misses <- data.combined[which(str_detect(data.combined$Name, "Miss")),]
 head(misses)
+
+#Hypothesis - Name titles correlate with age
+mrses <- data.combined[which(str_detect(data.combined$Name, "Mrs.")),]
+head(mrses)
+
+#Have a look on male data
+males <- data.combined[which(data.combined$Sex == "male"),]
+head(males)
+
+#Add title variable to explore a potential 3-D relationship between Survived and PClass
+
+#Create a function to extract title
+Extract_Title <- function(name){
+  name <- as.character(name)
+  
+  if(length(grep("Mr.", name)) > 0 ){
+    return("Mr.")
+  } else if (length("Miss.", name) > 0){
+    return("Miss")
+  } else if (length(grep("Master.", name)) > 0){
+    return("Master")
+  } else if (length(grep("Mrs.", name)) > 0){
+    return("Mrs.")
+  } else {
+    return("Other")
+  }
+}
+
+titles <- NULL
+
+#https://www.youtube.com/watch?v=32o0DnuRjfg&t=3968s 1:13:30
