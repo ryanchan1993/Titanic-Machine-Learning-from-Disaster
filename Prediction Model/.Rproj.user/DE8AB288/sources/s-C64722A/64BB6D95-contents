@@ -1,0 +1,41 @@
+#Load raw data
+train <- read.csv("train.csv", header = TRUE)
+test <- read.csv("test.csv", header = TRUE)
+
+#Add survived variable into the test data set
+test.survived <- data.frame(Survived=rep("None", nrow(test)), test[,])
+
+#Combine data sets
+data.combined <- rbind(train, test.survived)
+str(data.combined)
+
+data.combined$Survived <- as.factor(data.combined$Survived)
+data.combined$Pclass <- as.factor(data.combined$Pclass)
+
+table(data.combined$Pclass)
+
+#Load ggplot2 package
+library(ggplot2)
+
+#Hypothesis - Rich folks survived at a higher rate
+train$Pclass <- as.factor(train$Pclass)
+ggplot(train, aes(x = Pclass, fill = factor(Survived))) +
+  geom_histogram(width=0.5, stat = "count") +
+  xlab("PClass") +
+  ylab("Total Count") + 
+  labs(fill="Survived")
+head(as.character(train$Name))
+
+#Check for duplication of names
+length(unique(as.character(data.combined$Name)))
+
+#Store duplicated names into a vector
+dup.names <- as.character(data.combined[which(duplicated(as.character(data.combined$Name))),"Name"])
+
+#Closer look in the suspectedly duplicated record
+data.combined[which(data.combined$Name %in% dup.names),]
+
+library(stringr)
+
+misses <- data.combined[which(str_detect(data.combined$Name, "Miss")),]
+head(misses)
